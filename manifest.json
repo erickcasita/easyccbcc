@@ -1,0 +1,37 @@
+{
+    "manifest_version": 2,
+    "name": "Easy CC/BCC",
+    "description": "An easy way to add cc and bcc!",
+    "version": "1.1",
+    "author": "Erick'Casanova",
+    "browser_specific_settings": {
+        "gecko": {
+            "id": "auditoriasistemas@coronalostuxtlas.com.mx",
+            "strict_min_version": "78.0"
+        }
+    },
+    "background": {
+        "scripts": [
+          "background.js"
+        ]
+      },
+    "compose_action": {
+        
+        "default_area": "maintoolbar",
+        "default_title": "Easy CC/BCC",
+        "default_icon": "images/icon-32px.png"
+    },
+    "icons": {
+        "64": "images/icon.png",
+        "32": "images/icon-32px.png",
+        "16": "images/icon-16px.png"
+    },
+    "permissions": [
+        "compose",
+        "activeTab",
+        "tabs",
+        "tabHide",
+        "messagesRead",
+        "addressBooks"
+        ]
+}
