@@ -1,1 +1,1 @@
-#My Extension Thunderbird
+## My Extension Thunderbird
