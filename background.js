@@ -61,7 +61,7 @@ async function addContactToAddressLine(tabId) {
    //Add contacts cc list to cc tab
   for (var cc in contactscc){
 
-          if(!validatecc(contactscc[cc]) && !validateto(contactscc[cc]))
+          if(!validateto(cc) && !validatecc(cc))
           {
             outinfo = await messenger.contacts.get(contactscc[cc]);
             contacdisplay = outinfo.properties.DisplayName + " <"+outinfo.properties.PrimaryEmail+">";
@@ -69,11 +69,11 @@ async function addContactToAddressLine(tabId) {
           }
       }
 
-        //Add contacts bcc to bcc tab
+    //Add contacts bcc to bcc tab
 
         for (var bcc in contactsbcc){
 
-            if(!validatebcc(contactsbcc[bcc]) && !validateto(contactsbcc[bcc])){
+            if(!validateto(bcc) && !validatebcc(bcc)){
               outinfo = await messenger.contacts.get(contactsbcc[bcc]);
               contacdisplay = outinfo.properties.DisplayName + " <"+outinfo.properties.PrimaryEmail+">";
               panel.bcc.push(contacdisplay);
