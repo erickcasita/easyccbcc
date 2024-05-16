@@ -66,6 +66,7 @@ async function addContactToAddressLine(tabId) {
             outinfo = await messenger.contacts.get(contactscc[cc]);
             contacdisplay = outinfo.properties.DisplayName + " <"+outinfo.properties.PrimaryEmail+">";
             panel.cc.push(contacdisplay);
+            //brakpoint
           }
       }
 
