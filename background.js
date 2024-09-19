@@ -1,104 +1,80 @@
 messenger.composeAction.onClicked.addListener(buttonClicked);
 //variables iniciales
-
-let contactsall = ['Alberto Vargas Quino <soportesistemas@coronalostuxtlas.com.mx>','Ing. Rafael Fararoni Mortera <direcciongral@coronalostuxtlas.com.mx>','Diana Laura Vazquez Malaga <rh@coronalostuxtlas.com.mx>'];
-
-let contactscc = ['Alberto Vargas Quino <soportesistemas@coronalostuxtlas.com.mx>'];
-let contactsbcc = ['Ing. Rafael Fararoni Mortera <direcciongral@coronalostuxtlas.com.mx>','Diana Laura Vazquez Malaga <rh@coronalostuxtlas.com.mx>'];
-let panelcc =  [];
-let panelbcc =  [];
-let panelto = [];
+let contactscc = [
+  "Alberto Vargas Quino <soportesistemas@coronalostuxtlas.com.mx>",
+];
+let contactsbcc = [
+  '"Ing. Rafael Fararoni Mortera" <direcciongral@coronalostuxtlas.com.mx>',
+  "Diana Laura Vazquez Malaga <rh@coronalostuxtlas.com.mx>",
+];
 async function buttonClicked(tab) {
-    addContactToAddressLine(tab.id);
-    
+  addContactToAddressLine(tab.id);
 }
 
-
-
-function validatecontacs (cc, contacts){
-  bandera = false;
-  let contact = contacts.find(element => element === cc);
-  if(contact == undefined){
-      //panelcc.push(cc);
-      return bandera ;
-  }
-  return bandera = true;
-}
-
-
-function validatebcc (bcc){
-  bandera = false;
-  let idcontact = panelbcc.find(element => element === bcc);
-  if(idcontact == undefined){
-      panelbcc.push(bcc);
-      return bandera ;
-  }
-  return bandera = true;
-}
-
-function validateto(to){
-  bandera = false;
-  let idcontact = contactsall.find(element => element === to);
-  if(idcontact == undefined){
-      return bandera ;
-  }
-  return bandera = true;
-}
-
-async function addContactToAddressLine(tabId) 
-{
+async function addContactToAddressLine(tabId) {
   //obtenemos el panel
   let panel = await messenger.compose.getComposeDetails(tabId);
-  console.log(panel.cc.length);
-  console.log(panel.bcc.length);
-  console.log(panel.to.length);
-
-  if(panel.cc.length === 0 && panel.bcc.length === 0 && panel.to.length === 0){
-    for (var cc in contactscc){
-  
-        panel.cc.push(contactscc[cc]);
-    
-  }
-
-//Add contacts bcc to bcc tab
-
-    for (var bcc in contactsbcc){
-
-      
-          panel.bcc.push(contactsbcc[bcc]);
+  //si no hay remitente, copia y copia oculta
+  if (
+    panel.cc.length === 0 &&
+    panel.bcc.length === 0 &&
+    panel.to.length === 0
+  ) {
+    for (var cc in contactscc) {
+      panel.cc.push(contactscc[cc]);
+    }
+    //Add contacts bcc to bcc tab
+    for (var bcc in contactsbcc) {
+      panel.bcc.push(contactsbcc[bcc]);
     }
   }
-  
-
-  if(panel.to.length>=1 && panel.cc.length<=0 && panel.bcc<=0){
-   
-    console.log("holaa");
-    contactscc.forEach(element => {
-      if(!validatecontacs(element,panel.to)){
-        panel.cc.push(element);
+  if (panel.to.length >= 1 && panel.cc.length <= 0 && panel.bcc <= 0) {
+    tmpcc = [];
+    tmpbcc = [];
+    panel.to.forEach((to) => {
+      let banderacc = contactscc.find(function (cc) {
+        return cc == to;
+      });
+      let banderabcc = contactsbcc.find(function (bcc) {
+        return bcc == to;
+      });
+      if (banderacc) {
+        tmpcc.push(banderacc);
       }
-    })
-
-    contactsbcc.forEach(element => {
-      if(!validatecontacs(element,panel.to)){
-        panel.bcc.push(element);
+      if (banderabcc) {
+        tmpbcc.push(banderabcc);
       }
-    })
-    
-  }
-
-  if(panel.cc.length>=1 && panel.to.length<=0 && panel.bcc.length<=0){
-    contactscc.forEach(element => {
-      if(!validatecontacs(element,panel.cc)){
-        panel.cc.push(element);
-      }
-    })
-
-    contactsbcc.forEach(element => {
-      if(!validatecontacs(element,panel.cc)){
-        panel.bcc.push(element);
-      }
-    })
+    });
+    //Añadir a panel cc
+    if (tmpcc.length > 0) {
+      contactscc.forEach((cc) => {
+        let checkcc = tmpcc.find(function (ccpanel) {
+          return ccpanel == cc;
+        });
+        if (checkcc == undefined) {
+          panel.cc.push(cc);
+        }
+      });
+    } else {
+      contactscc.forEach((cc) => {
+        panel.cc.push(cc);
+      });
+    }
+    //Añadir a panel bcc
+    if (tmpbcc.length > 0) {
+      contactsbcc.forEach((bcc) => {
+        let checkbcc = tmpbcc.find(function (bccpanel) {
+          return bccpanel == bcc;
+        });
+        if (checkbcc == undefined) {
+          panel.bcc.push(bcc);
+        }
+      });
+    } else {
+      contactsbcc.forEach((bcc) => {
+        panel.bcc.push(bcc);
+      });
+    }
   }
 
   await messenger.compose.setComposeDetails(tabId, panel);

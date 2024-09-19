@@ -2,7 +2,7 @@
     "manifest_version": 2,
     "name": "Easy CC/BCC",
     "description": "An easy way to add cc and bcc!",
-    "version": "1.3",
+    "version": "1.4",
     "author": "Erick'Casanova",
     "browser_specific_settings": {
         "gecko": {
