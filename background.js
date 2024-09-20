@@ -28,7 +28,7 @@ async function addContactToAddressLine(tabId) {
       panel.bcc.push(contactsbcc[bcc]);
     }
   }
-  if (panel.to.length >= 1 && panel.cc.length <= 0 && panel.bcc <= 0) {
+  if (panel.to.length >= 1 && panel.cc.length <= 0 && panel.bcc <= 0 || panel.cc.length>=1) {
     tmpcc = [];
     tmpbcc = [];
     panel.to.forEach((to) => {
@@ -57,7 +57,12 @@ async function addContactToAddressLine(tabId) {
       });
     } else {
       contactscc.forEach((cc) => {
-        panel.cc.push(cc);
+        let checkpanelcc = panel.cc.find(function(ccpanel){
+            return ccpanel == cc;
+        });
+        if(checkpanelcc == undefined){
+          panel.cc.push(cc);
+        }
       });
     }
     //Añadir a panel bcc
@@ -76,6 +81,5 @@ async function addContactToAddressLine(tabId) {
       });
     }
   }
-
   await messenger.compose.setComposeDetails(tabId, panel);
 }
