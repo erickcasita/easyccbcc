@@ -27,59 +27,24 @@ async function addContactToAddressLine(tabId) {
     for (var bcc in contactsbcc) {
       panel.bcc.push(contactsbcc[bcc]);
     }
-  }
-  if (panel.to.length >= 1 && panel.cc.length <= 0 && panel.bcc <= 0 || panel.cc.length>=1) {
-    tmpcc = [];
-    tmpbcc = [];
-    panel.to.forEach((to) => {
-      let banderacc = contactscc.find(function (cc) {
-        return cc == to;
+  }else{
+    emails = panel.to.concat(panel.cc,panel.bcc);
+    contactscc.forEach((cc) => {
+      let checkcc = emails.find(function (panel) {
+        return panel == cc;
       });
-      let banderabcc = contactsbcc.find(function (bcc) {
-        return bcc == to;
-      });
-      if (banderacc) {
-        tmpcc.push(banderacc);
-      }
-      if (banderabcc) {
-        tmpbcc.push(banderabcc);
+      if (checkcc == undefined) {
+          panel.cc.push(cc);
       }
     });
-    //Añadir a panel cc
-    if (tmpcc.length > 0) {
-      contactscc.forEach((cc) => {
-        let checkcc = tmpcc.find(function (ccpanel) {
-          return ccpanel == cc;
-        });
-        if (checkcc == undefined) {
-          panel.cc.push(cc);
-        }
+    contactsbcc.forEach((bcc) => {
+      let checkbcc = emails.find(function (panel) {
+        return panel == bcc;
       });
-    } else {
-      contactscc.forEach((cc) => {
-        let checkpanelcc = panel.cc.find(function(ccpanel){
-            return ccpanel == cc;
-        });
-        if(checkpanelcc == undefined){
-          panel.cc.push(cc);
-        }
-      });
-    }
-    //Añadir a panel bcc
-    if (tmpbcc.length > 0) {
-      contactsbcc.forEach((bcc) => {
-        let checkbcc = tmpbcc.find(function (bccpanel) {
-          return bccpanel == bcc;
-        });
-        if (checkbcc == undefined) {
+      if (checkbcc == undefined) {
           panel.bcc.push(bcc);
-        }
-      });
-    } else {
-      contactsbcc.forEach((bcc) => {
-        panel.bcc.push(bcc);
-      });
-    }
+      }
+    });
   }
   await messenger.compose.setComposeDetails(tabId, panel);
 }
